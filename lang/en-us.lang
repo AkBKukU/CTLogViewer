@@ -1,0 +1,23 @@
+name: English US
+id: en-us
+by: Shelby Jueden
+from: original
+
+overviewTitle: Overview
+overviewHighest: Highest
+overviewLowest: Lowest
+overviewAverage: Average
+overviewThirtyAve: 30m Ave
+overviewShowAverage: Show Averages
+overviewShowCore: Single Core
+
+graphTabAmounts: Amounts
+graphTabAtTime: At Times
+graphTabOverTime: Over Time
+graphDisplayCoresAverage: Core Average
+graphDisplayCoresSingle: Single Core
+graphDisplayCoresAll: Show All
+
+graphTabOverTimeAllLogs: All Logs
+graphTabOverTimeByLog: By Log
+graphTabOverTimeByDay: By Day
