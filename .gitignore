@@ -4,3 +4,7 @@ bin/
 
 # gedit temp files
 *~
+
+#eclipse file
+.project
+.classpath
