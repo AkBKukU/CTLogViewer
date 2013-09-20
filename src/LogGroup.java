@@ -37,10 +37,8 @@ public class LogGroup {
         int numLogs = 0;
         
         for(int c=0; c < fileList.length;c++){
-            System.out.println("Checking file: " + fileList[c]);
             if( fileList[c].substring(fileList[c].length()-3).equals("csv") ){
                 numLogs++;
-                System.out.println("Chis log");
                 
             }
         }
