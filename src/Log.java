@@ -26,6 +26,10 @@ public class Log {
     private int[][] load;
     private int[] lowTemp;
     private int[] highTemp;
+    private int[] lowLoad;
+    private int[] highLoad;
+    private Float[] lowSpeed;
+    private Float[] highSpeed;
     private Float[][] speed;
     private String[] time;
     
@@ -44,8 +48,10 @@ public class Log {
     public Log(String filePath) throws IOException{
         this.filePath = filePath;
         fileToArray();
-        getGeneralInfo();
-        getData();
+        if(rawDump.length > 9){
+            getGeneralInfo();
+            getData();
+        }
     }
     
     /*fileToArray
@@ -119,7 +125,7 @@ public class Log {
         }
         
         //--Get start time
-        this.startTime = rawDump[11].split(",")[0].trim();
+        this.startTime = rawDump[DATA_START].split(",")[0].trim();
         this.startTime = toISO8601(this.startTime);
         
         //--Get end time 
@@ -161,9 +167,17 @@ public class Log {
         this.speed = new Float[last-DATA_START][numCores];
         this.lowTemp = new int[numCores];
         this.highTemp = new int[numCores];
+        this.lowLoad = new int[numCores];
+        this.highLoad = new int[numCores];
+        this.lowSpeed = new Float[numCores];
+        this.highSpeed = new Float[numCores];
         for(int d=0; d<this.numCores;d++){
             this.lowTemp[d] = 1000;
             this.highTemp[d] = 0;
+            this.lowLoad[d] = 1000;
+            this.highLoad[d] = 0;
+            this.lowSpeed[d] = 10000f;
+            this.highSpeed[d] = 0f;
         }
         
         
@@ -181,11 +195,32 @@ public class Log {
                 this.temps[c-DATA_START][d] = Integer.parseInt(entry[1+d]);
                 this.load[c-DATA_START][d] = Integer.parseInt(entry[1+numCores+1+(d*5)+3]);
                 this.speed[c-DATA_START][d] = Float.parseFloat(entry[1+numCores+1+(d*5)+4]);
-                if(this.lowTemp[d] > Integer.parseInt(entry[1+d])){
+                
+                //--Highest temp
+                if(this.lowTemp[d] > Integer.parseInt(entry[1+d]) ){
                     this.lowTemp[d] = Integer.parseInt(entry[1+d]);
                 }
-                if(this.highTemp[d] < Integer.parseInt(entry[1+d])){
+                //--Lowest temp
+                if(this.highTemp[d] < Integer.parseInt(entry[1+d]) ){
                     this.highTemp[d] = Integer.parseInt(entry[1+d]);
+                }
+                
+                //--Highest load
+                if(this.lowLoad[d] > Integer.parseInt(entry[1+numCores+1+(d*5)+3]) ){
+                    this.lowLoad[d] = Integer.parseInt(entry[1+numCores+1+(d*5)+3]);
+                }
+                //--Lowest load
+                if(this.highLoad[d] < Integer.parseInt(entry[1+numCores+1+(d*5)+3]) ){
+                    this.highLoad[d] = Integer.parseInt(entry[1+numCores+1+(d*5)+3]);
+                }
+
+                //--Highest temp
+                if(this.lowSpeed[d] > Float.parseFloat(entry[1+numCores+1+(d*5)+4]) ){
+                    this.lowSpeed[d] = Float.parseFloat(entry[1+numCores+1+(d*5)+4]);
+                }
+                //--Lowest temp
+                if(this.highSpeed[d] < Float.parseFloat(entry[1+numCores+1+(d*5)+4]) ){
+                    this.highSpeed[d] = Float.parseFloat(entry[1+numCores+1+(d*5)+4]);
                 }
             }
         }
@@ -199,11 +234,19 @@ public class Log {
      */
     private String toISO8601(String input){
         
-        return 
-            "20" + input.substring(15,17) + "-" + 
-            input.substring(12,14) + "-" + 
-            input.substring(9,11) + "T" +
-            input.substring(0,8);
+        String output = "";
+        
+        if(input.length() > 8){
+            output =
+                "20" + input.substring(15,17) + "-" + 
+                input.substring(12,14) + "-" + 
+                input.substring(9,11) + "T" +
+                input.substring(0,8);
+        }else{
+            output = input;
+        }
+        
+        return output;
     }
     
     /*countLines
@@ -273,6 +316,172 @@ public class Log {
             System.out.println( "The lowest temp for Core " + d + " was " + this.lowTemp[d]);
             System.out.println( "The highest temp for Core " + d + " was " + this.highTemp[d]);
         }
+    }
+    
+    
+    
+    
+    
+    /* Accessors
+     * 
+     * Use these to retrieve all the data from the object
+     * 
+     */
+
+
+    /*getFileName
+     * 
+     * Returns the name of the log file
+     */
+    public String getFileName(){
+        return this.fileName;
+    }
+    
+    /*getStartTime
+     * 
+     * Returns the time in the first log entry
+     */
+    public String getStartTime(){
+        return this.startTime;
+    }
+    
+    /*getEndTime
+     * 
+     * Returns the time in the last log entry
+     */
+    public String getEndTime(){
+        return this.endTime;
+    }
+    
+    /*getCpuId
+     * 
+     * Returns the hex ID for the CPU
+     */
+    public String getCpuId(){
+        return this.cpuId;
+    }
+    
+    /*getCpuName
+     * 
+     * Returns the stored readable name for the processor
+     */
+    public String getCpuName(){
+        return this.cpuName;
+    }
+    
+    /*getCpuPlatform
+     * 
+     * Returns the platform and socket of the CPU
+     */
+    public String getCpuPlatform(){
+        return this.cpuPlatform;
+    }
+    
+    /*getCpuRevision
+     * 
+     * Returns the revision of the CPU
+     */
+    public String getCpuRevision(){
+        return this.cpuRevision;
+    }
+    
+    /*getCpuLithography
+     * 
+     * Returns the lithography or die size of the CPU
+     */
+    public String getCpuLithography(){
+        return this.cpuLithography;
+    }
+    
+    /*getNumCores
+     * 
+     * Returns the number of cores the CPU has
+     */
+    public int getNumCores(){
+        return this.numCores;
+    }
+    
+    
+    
+
+    /*getTime
+     * 
+     * Returns log times
+     */
+    public String[] getTime(){
+        return this.time;
+    }
+    
+    /*getTemps
+     * 
+     * Returns logged temperatures
+     */
+    public int[][] getTemps(){
+        return this.temps;
+    }
+    
+    /*getLoad
+     * 
+     * Returns logged loads
+     */
+    public int[][] getLoad(){
+        return this.load;
+    }
+    
+    /*getSpeed
+     * 
+     * Returns logged CPU speeds
+     */
+    public Float[][] getSpeed(){
+        return this.speed;
+    }
+    
+    /*getLowTemp
+     * 
+     * Returns lowest logged temperature
+     */
+    public int[] getLowTemp(){
+        return this.lowTemp;
+    }
+    
+    /*getHighTemp
+     * 
+     * Returns highest logged temperature
+     */
+    public int[] getHighTemp(){
+        return this.highTemp;
+    }
+    
+    /*getLowLoad
+     * 
+     * Returns lowest logged load
+     */
+    public int[] getLowLoad(){
+        return this.lowLoad;
+    }
+    
+    /*getHighLoad
+     * 
+     * Returns highest logged load
+     */
+    public int[] getHighLoad(){
+        return this.highLoad;
+    }
+    
+    /*getLowSpeed
+     * 
+     * Returns lowest logged CPU speed
+     */
+    public Float[] getLowSpeed(){
+        return this.highSpeed;
+    }
+    
+    /*getHighSpeed
+     * 
+     * Returns highest logged CPU speed
+     */
+    public Float[] getHighSpeed(){
+        return this.highSpeed;
     }
     
 }

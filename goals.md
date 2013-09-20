@@ -16,3 +16,11 @@ I intend to make the program have all of these features.
  - Bar graph to show show the average temperatures durring the day
  - Line graph to show the change in temperature durring a set time
  - Pie chart to show average load on each core
+
+ 
+ ####Error Handling####
+ It needs to be able to compensate for these potential cases
+ 
+  - Corrupt logs
+  - Multiple CPUs in different logs
+  - Overlapping time spans between logs
