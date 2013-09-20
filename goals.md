@@ -12,15 +12,15 @@ I intend to make the program have all of these features.
 
 ###Charts###
 
- - Bar graph that shows how many instances of a tempurature were logged
- - Bar graph to show show the average temperatures durring the day
- - Line graph to show the change in temperature durring a set time
+ - Bar graph that shows how many instances of a temperature were logged
+ - Bar graph to show show the average temperatures during the day
+ - Line graph to show the change in temperature during a set time
  - Pie chart to show average load on each core
 
  
- ####Error Handling####
- It needs to be able to compensate for these potential cases
+###Error Handling###
+It needs to be able to compensate for these potential cases
  
-  - Corrupt logs
-  - Multiple CPUs in different logs
-  - Overlapping time spans between logs
+ - Corrupt logs
+ - Multiple CPUs in different logs
+ - Overlapping time spans between logs
