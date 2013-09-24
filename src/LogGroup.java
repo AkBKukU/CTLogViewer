@@ -11,6 +11,7 @@ public class LogGroup {
     private int[] highestTemps;
     private int[] lowestTemps;
     private int numCores = 0;
+    private int numLogs = 0;
     
     
     public LogGroup(String path) throws IOException{
@@ -23,7 +24,6 @@ public class LogGroup {
         }else{
             loadLogFolder(path);
         }
-        logs[0].printTemps();
         
     }
     
@@ -41,31 +41,41 @@ public class LogGroup {
         
         String[] fileList = this.logPath.list();
         
-        int numLogs = 0;
+        this.numLogs = 0;
+        String validLogs = "";
         
         for(int c=0; c < fileList.length;c++){
             if( fileList[c].substring(fileList[c].length()-3).equals("csv") ){
-                numLogs++;
+                Log checkLog = new Log (folderPath  + fileList[c]);
+                
+                if(checkLog.isValid()){
+                    numLogs++;
+                    validLogs = validLogs + fileList[c] + ",";
+                }
+                
                 
             }
         }
         boolean getCores = true;
         int logIndex = 0;
         
-        logs = new Log[numLogs];
+        logs = new Log[this.numLogs];
         for(int c=0; c < fileList.length;c++){
-            if( fileList[c].substring(fileList[c].length()-3).equals("csv") ){
+            
+            if( fileList[c].substring(fileList[c].length()-3).equals("csv") && validLogs.contains(fileList[c]) ){
                 logs[logIndex] = new Log(folderPath  + fileList[c]);
                 if(getCores){
                 	this.numCores = logs[logIndex].getNumCores();
 
                     this.lowestTemps = new int[numCores];
                     this.highestTemps =  new int[numCores];
-                }
-                
-                for(int d=0; d<this.numCores;d++){
-                    this.lowestTemps[d] = 1000;
-                    this.highestTemps[d] = 0;
+                    
+                    for(int d=0; d<this.numCores;d++){
+                        this.lowestTemps[d] = 1000;
+                        this.highestTemps[d] = 0;
+                    }
+                    
+                    getCores=false;
                 }
 
                 //--Get data for each core
@@ -93,9 +103,17 @@ public class LogGroup {
      */
     public void printTemps(){
         for(int d=0; d<this.numCores;d++){
-            System.out.println( "The lowest temp for Core " + d + " was " + this.lowestTemps[d]);
-            System.out.println( "The highest temp for Core " + d + " was " + this.highestTemps[d]);
+            System.out.println( "Core " + d);
+            System.out.println( "L" + this.lowestTemps[d] + " H" + this.highestTemps[d] + "\n");
         }
+    }
+    
+    /*getNumLogs
+     * 
+     * Returns highest logged load
+     */
+    public int getNumLogs(){
+        return this.numLogs;
     }
     
 }

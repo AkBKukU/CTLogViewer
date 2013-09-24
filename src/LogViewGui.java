@@ -34,6 +34,19 @@ public class LogViewGui extends JFrame{
         //--Set title
         super("CT Log Viewer");
 
+        //--Try to set the UI to system native
+        try{
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        
         //--Load text
         loadLanguage();
         

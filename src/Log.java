@@ -48,6 +48,7 @@ public class Log {
     public Log(String filePath) throws IOException{
         this.filePath = filePath;
         fileToArray();
+        isValid();
         if(rawDump.length > 9){
             getGeneralInfo();
             getData();
@@ -272,12 +273,32 @@ public class Log {
         return output;
     }
     
+    /*isValid
+     * 
+     * returns whether or not the file is a valid
+     * 
+     */
+    public boolean isValid(){
+        
+        boolean validity = false;
+        
+        if(
+            rawDump.length > 9 &&
+            rawDump[0].split(",")[0].equals("CPUID:") &&
+            !(rawDump[9].equals(""))
+                
+        ){
+            validity = true;
+        }
+        return validity;
+    }
+    
 
 
 
     /*toString
      * 
-     * Return object info
+     * Return obisValidject info
      */
     public String toString(){
         
