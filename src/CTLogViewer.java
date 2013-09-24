@@ -13,8 +13,9 @@ public class CTLogViewer {
         //window = new LogViewGui();
         //--With Session end "/home/akbkuku/CT-Log 2013-09-19 19-58-47.csv"
         //--Without "/media/Windows/Program Files/Core Temp/CT-Log 2013-09-18 09-10-37.csv"
-        LogGroup test = new LogGroup("/media/Windows/Program Files/Core Temp/CT-Log 2013-09-10 11-56-21.csv");
+    	// Windows C:\Program Files\Core Temp
+        LogGroup test = new LogGroup("C:\\Program Files\\Core Temp\\");
         //System.out.println(test.toString());
-        //test.printTemps();
+        test.printTemps();
     }
 }

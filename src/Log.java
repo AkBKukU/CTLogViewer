@@ -78,7 +78,7 @@ public class Log {
     
     /*getGeneralInfo
      * 
-     * Stores the general info from the log
+     * Stores the general info from the log`
      */
     private boolean getGeneralInfo(){
         
